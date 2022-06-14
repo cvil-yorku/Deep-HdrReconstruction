@@ -1,8 +1,7 @@
 import cv2
 import numpy as np
 import scipy.misc
-import OpenEXR, Imath
-import pyexr
+import imageio, Imath
 
 from PIL import Image
 
@@ -73,15 +72,15 @@ def writeEXR(img, file):
     try:
         img = np.squeeze(img)
         sz = img.shape
-        header = OpenEXR.Header(sz[1], sz[0])
         half_chan = Imath.Channel(Imath.PixelType(Imath.PixelType.FLOAT))
-        header['channels'] = dict([(c, half_chan) for c in "RGB"])
-        out = OpenEXR.OutputFile(file, header)
-        R = (img[:,:,0]).astype(np.float32).tostring()
-        G = (img[:,:,1]).astype(np.float32).tostring()
-        B = (img[:,:,2]).astype(np.float32).tostring()
-        out.writePixels({'R' : R, 'G' : G, 'B' : B})
-        out.close()
+        #header['channels'] = dict([(c, half_chan) for c in "RGB"])
+        #out = [R, G, B] #OpenEXR.OutputFile(file, header)
+        #R = (img[:,:,0]).astype(np.float32).tostring()
+        #G = (img[:,:,1]).astype(np.float32).tostring()
+        #B = (img[:,:,2]).astype(np.float32).tostring()
+        #out.writePixels({'R' : R, 'G' : G, 'B' : B})
+        #out.close()
+        imageio.imwrite(file, img)
     except Exception as e:
         raise IOException("Failed writing EXR: %s"%e)
 
